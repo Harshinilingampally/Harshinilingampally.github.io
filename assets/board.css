@@ -1,0 +1,866 @@
+/* ============================================================
+   The Board — enamel on steel, bone plates, brass slot rails.
+   ============================================================ */
+
+:root {
+  --enamel:      #0E2A1E;
+  --enamel-deep: #082016;
+  --enamel-well: #061a12;
+  --enamel-edge: #16412E;
+  --enamel-rule: #1C4C36;
+
+  --plate:       #EDE6D6;
+  --plate-worn:  #DCD2BC;
+  --plate-ink:   #121212;
+  --plate-edge:  #B9AE95;
+
+  --brass:       #B4833A;
+  --brass-lit:   #D9A95C;
+  --brass-dark:  #6F4C1C;
+
+  --signal:      #A8200F;   /* plate ground only */
+  --signal-text: #F07A55;   /* text-safe on enamel */
+
+  --chalk:       #CFDCD2;
+  --chalk-dim:   #A9C0B2;
+
+  --display: 'Big Shoulders Display', 'Arial Narrow', 'Haettenschweiler', sans-serif;
+  --text:    'Archivo', system-ui, sans-serif;
+  --data:    'Azeret Mono', ui-monospace, monospace;
+
+  --slot-in: inset 0 2px 4px rgba(0,0,0,.55), inset 0 -1px 0 var(--enamel-edge);
+  --plate-up: 0 1px 0 #fffdf7 inset, 0 2px 3px rgba(0,0,0,.42), 0 6px 14px rgba(0,0,0,.26);
+
+  --ease: cubic-bezier(.16,.84,.26,1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; scrollbar-color: var(--brass) var(--enamel-deep); }
+
+body {
+  margin: 0;
+  background: var(--enamel-deep);
+  color: var(--chalk);
+  font-family: var(--text);
+  font-size: clamp(.97rem, .94rem + .2vw, 1.06rem);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- browser surfaces, themed --- */
+::selection { background: var(--brass); color: #10150F; }
+:focus-visible {
+  outline: 3px solid var(--brass-lit);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+::-webkit-scrollbar { width: 13px; height: 13px; }
+::-webkit-scrollbar-track { background: var(--enamel-well); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, var(--brass-dark), var(--brass) 45%, var(--brass-dark));
+  border: 3px solid var(--enamel-well);
+  border-radius: 7px;
+}
+.sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* ============================================================
+   The board panel
+   ============================================================ */
+
+.board {
+  max-width: 1300px;
+  margin: clamp(0px, 2vw, 28px) auto;
+  position: relative;
+  background: var(--enamel);
+  border: 1px solid var(--enamel-edge);
+  box-shadow:
+    0 0 0 6px var(--enamel-deep),
+    0 2px 0 7px var(--brass-dark),
+    0 26px 70px rgba(0,0,0,.55);
+  padding: clamp(18px, 3.2vw, 46px);
+}
+
+/* vitreous enamel is not a flat fill: it has tooth */
+.board::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  opacity: .14;
+  mix-blend-mode: overlay;
+}
+.board > * { position: relative; z-index: 1; }
+
+/* --- rails ------------------------------------------------- */
+
+.rail--top {
+  padding-bottom: clamp(16px, 2.4vw, 26px);
+  border-bottom: 2px solid var(--brass-dark);
+  box-shadow: 0 3px 0 -1px var(--brass);
+}
+
+.nameplate {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(3px, .5vw, 7px);
+  padding: clamp(7px, 1vw, 11px);
+  background: var(--enamel-well);
+  box-shadow: var(--slot-in);
+}
+
+.pl {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(2.1rem, 8.4vw, 5rem);
+  line-height: .86;
+  letter-spacing: -.01em;
+  color: var(--plate-ink);
+  background-color: var(--plate);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  background-blend-mode: multiply;
+  box-shadow: var(--plate-up);
+  padding: clamp(.1em, .12em, .14em) clamp(.16em, .2em, .22em) .04em;
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.strip {
+  display: block;
+  font-size: .785rem;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--chalk-dim);
+}
+.strip--name { margin: 12px 0 0; letter-spacing: .185em; color: var(--brass-lit); }
+
+/* ============================================================
+   Regions
+   ============================================================ */
+
+.region { padding-top: clamp(44px, 6vw, 86px); }
+
+.region__head {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(1.45rem, 3.4vw, 2.3rem);
+  letter-spacing: .005em;
+  text-transform: uppercase;
+  color: var(--plate);
+  margin: 0 0 .5rem;
+  padding-bottom: .34rem;
+  border-bottom: 1px solid var(--enamel-rule);
+}
+
+.region__note {
+  margin: 0 0 clamp(20px, 2.6vw, 32px);
+  max-width: 68ch;
+  color: var(--chalk-dim);
+}
+
+/* ============================================================
+   The register — one slot row per system
+   ============================================================ */
+
+.register { list-style: none; margin: 0; padding: 0; }
+
+.row { border-top: 1px solid var(--enamel-rule); }
+.row:last-child { border-bottom: 1px solid var(--enamel-rule); }
+.row[data-open="true"] { background: var(--enamel-deep); }
+
+.row__h { margin: 0; font-weight: inherit; font-size: inherit; }
+
+.face {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr 15.5rem auto auto;
+  align-items: center;
+  gap: clamp(12px, 1.6vw, 26px);
+  padding: clamp(15px, 1.7vw, 22px) clamp(4px, .8vw, 10px);
+  background: none;
+  border: 0;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: background .18s var(--ease);
+}
+.face:hover { background: rgba(217,169,92,.055); }
+
+.face__no {
+  font-family: var(--data);
+  font-size: .8rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--brass-lit);
+  padding-top: .15em;
+}
+
+.face__name {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(1.26rem, 2.5vw, 1.85rem);
+  line-height: 1.04;
+  letter-spacing: .004em;
+  text-transform: uppercase;
+  color: var(--plate);
+  text-wrap: balance;
+}
+
+/* the slot rail runs from the name to the figure, the way a board is ruled */
+@media (min-width: 861px) {
+  .face__name {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    gap: 1.1rem;
+  }
+  .face__name::after {
+    content: "";
+    height: 0;
+    align-self: center;
+    border-top: 1px dotted var(--enamel-rule);
+  }
+}
+.row[data-open="true"] .face__name,
+.face:hover .face__name { color: #FBF6EA; }
+
+/* the figure plate, seated in its well */
+.face__fig { display: grid; justify-items: end; gap: 6px; text-align: right; }
+
+.fig {
+  display: block;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(1.9rem, 4vw, 3.3rem);
+  line-height: .9;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.012em;
+  color: var(--plate-ink);
+  background-color: var(--plate);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  background-blend-mode: multiply;
+  box-shadow: var(--plate-up);
+  padding: .1em .2em .03em;
+  min-width: 2.6em;
+  text-align: center;
+  transform-origin: 50% 0%;
+  backface-visibility: hidden;
+}
+.face__fig .strip { max-width: 100%; letter-spacing: .1em; line-height: 1.4; text-wrap: balance; }
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: .48em;
+  font-size: .785rem;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  padding: .42em .72em;
+  border: 1px solid currentColor;
+}
+.status__mark { width: 11px; height: 11px; flex: none; }
+.status--live  { color: var(--brass-lit); }
+.status--built { color: var(--chalk-dim); }
+
+.face__open {
+  display: inline-flex;
+  align-items: center;
+  gap: .5em;
+  font-size: .785rem;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--chalk-dim);
+}
+.chev {
+  width: 16px; height: 16px;
+  transition: transform .34s var(--ease);
+}
+.face[aria-expanded="true"] .chev { transform: rotate(180deg); }
+.face[aria-expanded="true"] .face__open { color: var(--brass-lit); }
+
+/* ============================================================
+   The panel — custody rail of one real record
+   ============================================================ */
+
+.panel {
+  padding: clamp(6px, 1vw, 10px) clamp(4px, .8vw, 10px) clamp(30px, 3.4vw, 44px);
+  max-width: 94ch;
+}
+.panel[hidden] { display: none; }
+
+.lede {
+  margin: .2rem 0 clamp(22px, 2.6vw, 30px);
+  max-width: 68ch;
+  font-size: 1.1em;
+  color: var(--plate);
+}
+
+.chain {
+  list-style: none;
+  margin: 0 0 clamp(22px, 2.6vw, 30px);
+  padding: 0 0 0 clamp(20px, 2.4vw, 30px);
+  border-left: 1px solid var(--brass-dark);
+}
+
+.link {
+  position: relative;
+  padding: 0 0 clamp(18px, 2vw, 24px);
+}
+.link::before {
+  content: "";
+  position: absolute;
+  top: .62em;
+  left: calc(-1 * clamp(20px, 2.4vw, 30px) - 5px);
+  width: 9px; height: 9px;
+  background: var(--brass);
+  box-shadow: 0 0 0 3px var(--enamel);
+}
+.link:last-child { padding-bottom: 0; }
+
+.link__node {
+  display: inline-flex;
+  align-items: center;
+  gap: .45em;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.12rem;
+  letter-spacing: .015em;
+  text-transform: uppercase;
+  color: var(--plate-ink);
+  background-color: var(--plate);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  background-blend-mode: multiply;
+  box-shadow: var(--plate-up);
+  padding: .2em .55em .12em;
+  transform-origin: 50% 0%;
+  backface-visibility: hidden;
+}
+.link__mark { width: 15px; height: 15px; flex: none; }
+
+.link__type {
+  display: block;
+  margin: .18em 0 .5em;
+  font-family: var(--data);
+  font-size: .775rem;
+  letter-spacing: .015em;
+  color: var(--brass-lit);
+}
+
+.link p { margin: 0; max-width: 68ch; color: var(--chalk-dim); }
+.link em { color: var(--plate); font-style: italic; }
+.link b { color: var(--plate); font-weight: 700; }
+
+.link--gate .link__node { color: #3A2708; background-color: var(--brass-lit); }
+.link--gate::before { background: var(--brass-lit); }
+
+.link--branch .link__node { color: #FBEFE9; background-color: var(--signal); }
+.link--branch::before { background: var(--signal); box-shadow: 0 0 0 3px var(--enamel); }
+
+code {
+  font-family: var(--data);
+  font-size: .86em;
+  color: var(--plate);
+  background: var(--enamel-well);
+  padding: .12em .38em;
+  border: 1px solid var(--enamel-rule);
+}
+
+.clever {
+  margin: 0 0 clamp(16px, 2vw, 22px);
+  max-width: 70ch;
+  padding: clamp(14px, 1.7vw, 20px) clamp(16px, 2vw, 24px);
+  background: var(--enamel-well);
+  border-top: 2px solid var(--brass);
+  color: var(--chalk);
+}
+.clever b {
+  display: block;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.04rem;
+  letter-spacing: .085em;
+  text-transform: uppercase;
+  color: var(--brass-lit);
+  margin-bottom: .35em;
+}
+
+.scope {
+  margin: 0 0 clamp(16px, 2vw, 22px);
+  max-width: 68ch;
+  font-size: .9rem;
+  font-style: italic;
+  color: var(--chalk-dim);
+}
+
+.chips { list-style: none; display: flex; flex-wrap: wrap; gap: 7px; margin: 0; padding: 0; }
+.chips li {
+  font-family: var(--data);
+  font-size: .775rem;
+  letter-spacing: .015em;
+  color: var(--plate-ink);
+  background: var(--plate-worn);
+  box-shadow: 0 1px 2px rgba(0,0,0,.35);
+  padding: .34em .6em .3em;
+}
+
+/* ============================================================
+   On screen — the reel shelf
+   ============================================================ */
+
+.shelf {
+  list-style: none;
+  margin: 0;
+  padding: clamp(12px, 1.4vw, 18px) 0 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(14px, 1.8vw, 24px);
+}
+@media (max-width: 1040px) { .shelf { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 700px)  { .shelf { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.tape { display: flex; }
+.tape__face {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 7px 11px;
+  background: var(--enamel-well);
+  border: 0;
+  box-shadow: var(--slot-in);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.tape__face img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 9 / 16;
+  object-fit: cover;
+  background: #000;
+  filter: saturate(.92) contrast(1.02);
+  transition: filter .3s var(--ease);
+}
+.tape__face:hover img { filter: saturate(1.04) contrast(1.04) brightness(1.04); }
+
+.tape__play {
+  position: absolute;
+  top: 7px; left: 7px;
+  width: 42px; height: 42px;
+  display: grid;
+  place-items: center;
+  color: #12150F;
+  background: var(--brass-lit);
+  box-shadow: 0 2px 4px rgba(0,0,0,.45);
+  transition: transform .26s var(--ease);
+}
+.tape__play svg { width: 17px; height: 17px; }
+.tape__face:hover .tape__play { transform: translateY(-2px); }
+
+.tape__title {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.02rem;
+  line-height: 1.08;
+  text-transform: uppercase;
+  color: var(--plate);
+  padding: 0 2px;
+}
+.tape__face .strip { padding: 0 2px; font-variant-numeric: tabular-nums; }
+
+.tape video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 9 / 16;
+  background: #000;
+}
+
+/* ============================================================
+   Racks — what it is built on
+   ============================================================ */
+
+.racks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: clamp(22px, 2.6vw, 34px);
+}
+
+.rack__h {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--brass-lit);
+  margin: 0 0 .45rem;
+  padding-bottom: .3rem;
+  border-bottom: 1px solid var(--enamel-rule);
+}
+.rack__note { margin: 0 0 .95rem; font-size: .915rem; color: var(--chalk-dim); max-width: 60ch; }
+
+/* the last rack runs the width of the board, like the base rail of a scoreboard */
+@media (min-width: 900px) {
+  .rack:last-child {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    align-items: start;
+    column-gap: clamp(22px, 2.6vw, 34px);
+    padding-top: clamp(10px, 1.2vw, 16px);
+  }
+  .rack:last-child .rack__h { grid-column: 1 / -1; }
+  .rack:last-child .rack__note { margin-bottom: 0; }
+}
+
+.plates { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; }
+.plates li {
+  font-family: var(--text);
+  font-size: .8rem;
+  font-weight: 600;
+  letter-spacing: .01em;
+  color: var(--plate-ink);
+  background-color: var(--plate);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  background-blend-mode: multiply;
+  box-shadow: 0 1px 2px rgba(0,0,0,.4), 0 3px 8px rgba(0,0,0,.2);
+  padding: .4em .66em .36em;
+}
+
+/* ============================================================
+   Bench
+   ============================================================ */
+
+.bench {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
+  gap: clamp(20px, 2.4vw, 30px);
+}
+.bench__item { border-top: 1px solid var(--enamel-rule); padding-top: 14px; }
+.bench__item h3 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.14rem;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  color: var(--plate);
+  margin: 0 0 .4rem;
+}
+.bench__item p { margin: 0; font-size: .915rem; color: var(--chalk-dim); }
+
+/* ============================================================
+   Bottom rail
+   ============================================================ */
+
+.rail--bottom {
+  margin-top: clamp(48px, 6vw, 84px);
+  padding-top: clamp(20px, 2.4vw, 28px);
+  border-top: 2px solid var(--brass-dark);
+  box-shadow: 0 -3px 0 -1px var(--brass);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(18px, 2.4vw, 32px);
+}
+.foot-note {
+  margin: 0;
+  max-width: 58ch;
+  font-size: .9rem;
+  line-height: 1.6;
+  color: var(--chalk-dim);
+}
+
+.plaque {
+  display: grid;
+  gap: 1px;
+  padding: clamp(11px, 1.3vw, 15px) clamp(18px, 2.2vw, 28px);
+  text-decoration: none;
+  color: #140E02;
+  background-color: var(--brass);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  background-blend-mode: multiply;
+  border-top: 2px solid #E8C486;
+  border-bottom: 3px solid var(--brass-dark);
+  box-shadow: 0 4px 5px rgba(0,0,0,.42), 0 12px 26px rgba(0,0,0,.26);
+  transition: transform .22s var(--ease), box-shadow .22s var(--ease);
+}
+.plaque__line {
+  font-size: .785rem;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #140E02;
+}
+.plaque__handle {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(1.3rem, 2.6vw, 1.8rem);
+  line-height: 1;
+  letter-spacing: .008em;
+  text-transform: uppercase;
+}
+.plaque:hover, .plaque:focus-visible {
+  transform: translateY(-2px);
+  background-color: var(--brass-lit);
+  box-shadow: 0 6px 7px rgba(0,0,0,.45), 0 16px 32px rgba(0,0,0,.3);
+}
+.plaque:active { transform: translateY(1px); }
+
+/* ============================================================
+   Motion — plates are posted, never faded in
+   ============================================================ */
+
+@keyframes post-plate {
+  from { transform: rotateX(-88deg); }
+  60%  { transform: rotateX(7deg); }
+  to   { transform: rotateX(0deg); }
+}
+
+.face__fig, .chain { perspective: 760px; }
+
+.fig[data-post],
+.link[data-post] .link__node {
+  animation: post-plate .46s var(--ease) both;
+  animation-delay: var(--d, 0ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+/* ============================================================
+   Narrow boards
+   ============================================================ */
+
+@media (max-width: 860px) {
+  .face {
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "no   name"
+      "fig  fig"
+      "stat open";
+    row-gap: 14px;
+  }
+  .face__no   { grid-area: no; }
+  .face__name { grid-area: name; }
+  .face__fig  {
+    grid-area: fig;
+    justify-items: start;
+    text-align: left;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 14px;
+  }
+  .face__fig .strip { max-width: 22ch; }
+  .status { grid-area: stat; justify-self: start; }
+  .face__open { grid-area: open; justify-self: end; }
+}
+
+@media (max-width: 540px) {
+  .board {
+    margin: 0;
+    border-left: 0;
+    border-right: 0;
+    box-shadow: 0 2px 0 0 var(--brass-dark);
+  }
+  .nameplate { gap: 2px; padding: 5px; }
+  .pl { font-size: clamp(1.75rem, 9.2vw, 3rem); padding: .1em .06em .04em; }
+  .rail--bottom { flex-direction: column; align-items: stretch; }
+  .plaque { justify-items: center; text-align: center; }
+}
+
+
+/* ============================================================
+   Added in the fix round
+   ============================================================ */
+
+.rail__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(14px, 2vw, 28px);
+}
+.rail__row .strip--name { margin-bottom: .2rem; }
+
+/* the rail's action is a slotted plate, not a second brass plaque at scale */
+.tab {
+  display: grid;
+  gap: 5px;
+  justify-items: center;
+  text-decoration: none;
+  text-align: center;
+}
+.tab__plate {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(1.08rem, 2vw, 1.4rem);
+  line-height: 1;
+  letter-spacing: .01em;
+  text-transform: uppercase;
+  color: var(--plate-ink);
+  background-color: var(--plate);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  background-blend-mode: multiply;
+  box-shadow: var(--plate-up);
+  border-bottom: 3px solid var(--brass-dark);
+  padding: .34em .7em .26em;
+  transition: border-bottom-color .2s var(--ease), transform .2s var(--ease);
+}
+.tab:hover .tab__plate, .tab:focus-visible .tab__plate {
+  border-bottom-color: var(--brass-lit);
+  transform: translateY(-2px);
+}
+.tab .strip { letter-spacing: .14em; }
+
+/* the two states, named on the board */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(12px, 2vw, 28px);
+  margin: 0;
+  padding: 0;
+}
+.legend--base {
+  margin-top: clamp(20px, 2.4vw, 28px);
+  padding-top: clamp(14px, 1.8vw, 20px);
+  border-top: 2px solid var(--brass-dark);
+  box-shadow: 0 -3px 0 -1px var(--brass);
+}
+.legend > div { display: flex; align-items: center; gap: .6rem; }
+.legend dt { margin: 0; }
+.legend dd { margin: 0; font-size: .89rem; color: var(--chalk-dim); }
+
+/* a board posts a total */
+.tally {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(16px, 2.4vw, 38px);
+  margin: clamp(16px, 2vw, 22px) 0 0;
+  font-size: .82rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--chalk-dim);
+}
+.tally__cell { display: inline-flex; align-items: baseline; gap: .5em; }
+.tally__cell b {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 1.9rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--plate);
+}
+.tally__cell--signal { color: var(--signal-text); }
+.tally__cell--signal b { color: var(--signal-text); }
+
+/* the shelf is seated in the board, and the first slot is the feature slot */
+.tape--feature { grid-column: span 2; }
+.tape--feature .tape__face { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; column-gap: 14px; }
+.tape--feature .tape__face img { grid-row: span 3; }
+.tape--feature .tape__title { align-self: end; font-size: clamp(1.1rem, 1.8vw, 1.5rem); }
+
+.tape__face { border-bottom: 3px solid var(--brass-dark); }
+.tape__face:hover, .tape__face:focus-visible { border-bottom-color: var(--brass); }
+
+.shelf__rail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: clamp(16px, 2vw, 22px);
+  padding-top: clamp(12px, 1.5vw, 16px);
+  border-top: 2px solid var(--brass-dark);
+  box-shadow: 0 -3px 0 -1px var(--brass);
+  text-decoration: none;
+  font-size: .82rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--chalk-dim);
+}
+.shelf__rail-handle {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(1.15rem, 2.2vw, 1.6rem);
+  letter-spacing: .01em;
+  color: var(--brass-lit);
+  border-bottom: 2px solid transparent;
+}
+.shelf__rail:hover .shelf__rail-handle,
+.shelf__rail:focus-visible .shelf__rail-handle { border-bottom-color: var(--brass); }
+
+/* the player that replaces a poster keeps its way back */
+.tape__back {
+  display: inline-flex;
+  align-items: center;
+  gap: .45em;
+  margin-top: 2px;
+  padding: .42em .7em .36em;
+  background: var(--plate-worn);
+  border: 0;
+  font-family: var(--text);
+  font-size: .775rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--plate-ink);
+  cursor: pointer;
+}
+.tape__back:hover { background: var(--plate); }
+.tape__state {
+  display: block;
+  padding: .3em 2px 0;
+  font-size: .775rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--chalk-dim);
+}
+.tape__state--error { color: var(--signal-text); }
+
+@media (max-width: 700px) {
+  .tape--feature { grid-column: span 2; }
+  .tape--feature .tape__face { grid-template-columns: minmax(0, 1fr); }
+  .tape--feature .tape__face img { grid-row: auto; }
+}
+
+.tape__blurb {
+  display: block;
+  padding: 0 2px;
+  font-size: .85rem;
+  line-height: 1.5;
+  color: var(--chalk-dim);
+}
+@media (min-width: 701px) {
+  .tape--feature .tape__face { grid-template-rows: auto auto auto 1fr; }
+  .tape--feature .tape__face img { grid-row: 1 / -1; }
+  .tape--feature .tape__title { align-self: end; font-size: clamp(1.15rem, 1.9vw, 1.6rem); }
+  .tape--feature .tape__blurb { max-width: 36ch; font-size: .95rem; line-height: 1.6; }
+  .tape--feature .tape__play { position: static; margin-bottom: 4px; }
+}

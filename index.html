@@ -1,914 +1,312 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Harshini | Software Developer & AI Engineer</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
-<style>
-  :root {
-    --pink:    #e91e8c;
-    --cyan:    #00e5ff;
-    --yellow:  #ffe600;
-    --purple:  #7c3aed;
-    --green:   #00e676;
-    --dark:    #080b12;
-    --darker:  #050709;
-    --card:    #0d1117;
-    --border:  rgba(255,255,255,0.07);
-    --text:    #e8eaf0;
-    --muted:   #7b8599;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--dark);
-    color: var(--text);
-    overflow-x: hidden;
-  }
-
-  /* ── NOISE OVERLAY ── */
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none; z-index: 0; opacity: 0.4;
-  }
-
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1.2rem 5%;
-    background: rgba(8,11,18,0.85);
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
-  }
-  .logo {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800; font-size: 1.4rem;
-    background: linear-gradient(90deg, var(--pink), var(--cyan));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .nav-links { display: flex; gap: 2rem; list-style: none; }
-  .nav-links a {
-    color: var(--muted); text-decoration: none;
-    font-size: 0.9rem; font-weight: 500;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--cyan); }
-
-  /* ── HERO ── */
-  #hero {
-    min-height: 100vh;
-    display: flex; align-items: center;
-    padding: 6rem 5% 4rem;
-    position: relative; overflow: hidden;
-  }
-  .hero-bg {
-    position: absolute; inset: 0; z-index: 0;
-    background:
-      radial-gradient(ellipse 60% 50% at 80% 50%, rgba(124,58,237,0.18) 0%, transparent 70%),
-      radial-gradient(ellipse 40% 40% at 10% 80%, rgba(233,30,140,0.15) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 50% at 50% 0%, rgba(0,229,255,0.1) 0%, transparent 60%);
-  }
-  .hero-content { position: relative; z-index: 1; max-width: 700px; }
-  .hero-tag {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    background: rgba(0,229,255,0.08);
-    border: 1px solid rgba(0,229,255,0.2);
-    border-radius: 100px;
-    padding: 0.4rem 1rem;
-    font-size: 0.8rem; font-weight: 500; color: var(--cyan);
-    margin-bottom: 1.5rem;
-    animation: fadeUp 0.6s ease both;
-  }
-  .hero-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-  h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(2.8rem, 6vw, 5rem);
-    font-weight: 800; line-height: 1.05;
-    margin-bottom: 1rem;
-    animation: fadeUp 0.6s 0.1s ease both;
-  }
-  h1 .grad-pink {
-    background: linear-gradient(90deg, var(--pink), var(--yellow));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  }
-  h1 .grad-cyan {
-    background: linear-gradient(90deg, var(--cyan), var(--green));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  }
-  .hero-sub {
-    font-size: 1.1rem; color: var(--muted); line-height: 1.7;
-    max-width: 520px; margin-bottom: 2rem;
-    animation: fadeUp 0.6s 0.2s ease both;
-  }
-  .hero-btns {
-    display: flex; gap: 1rem; flex-wrap: wrap;
-    animation: fadeUp 0.6s 0.3s ease both;
-  }
-  .btn-primary {
-    padding: 0.85rem 2rem; border-radius: 100px;
-    background: linear-gradient(135deg, var(--pink), var(--purple));
-    color: #fff; font-weight: 600; font-size: 0.95rem;
-    text-decoration: none; border: none; cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 0 30px rgba(233,30,140,0.3);
-  }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(233,30,140,0.5); }
-  .btn-outline {
-    padding: 0.85rem 2rem; border-radius: 100px;
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text); font-weight: 500; font-size: 0.95rem;
-    text-decoration: none; cursor: pointer;
-    transition: border-color 0.2s, color 0.2s;
-  }
-  .btn-outline:hover { border-color: var(--cyan); color: var(--cyan); }
-
-  .hero-scroll {
-    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
-    display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
-    color: var(--muted); font-size: 0.75rem;
-    animation: fadeUp 0.6s 0.5s ease both;
-  }
-  .scroll-line {
-    width: 1px; height: 50px;
-    background: linear-gradient(to bottom, var(--cyan), transparent);
-    animation: scrollDown 2s ease infinite;
-  }
-  @keyframes scrollDown { 0%{transform:scaleY(0);transform-origin:top} 50%{transform:scaleY(1);transform-origin:top} 51%{transform:scaleY(1);transform-origin:bottom} 100%{transform:scaleY(0);transform-origin:bottom} }
-
-  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
-
-  /* ── SECTIONS ── */
-  section { padding: 6rem 5%; position: relative; }
-  .section-label {
-    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em;
-    text-transform: uppercase; color: var(--cyan);
-    margin-bottom: 0.75rem;
-  }
-  .section-title {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-    font-weight: 700; line-height: 1.2;
-    margin-bottom: 1rem;
-  }
-  .section-desc { color: var(--muted); max-width: 520px; line-height: 1.7; margin-bottom: 3rem; }
-
-  /* ── ABOUT ── */
-  #about { background: var(--darker); }
-  .about-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
-    align-items: center;
-  }
-  .about-img-wrap {
-    position: relative;
-  }
-  .about-img-box {
-    width: 100%; aspect-ratio: 1;
-    border-radius: 24px;
-    background: linear-gradient(135deg, rgba(233,30,140,0.2), rgba(124,58,237,0.2));
-    border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Syne', sans-serif;
-    font-size: 6rem; font-weight: 800;
-    background-image: linear-gradient(135deg, #1a0a2e, #0d1117);
-    overflow: hidden;
-    position: relative;
-  }
-  .about-img-box::after {
-    content: 'H';
-    font-family: 'Syne', sans-serif;
-    font-size: 10rem; font-weight: 800;
-    background: linear-gradient(135deg, var(--pink), var(--cyan));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    opacity: 0.5;
-  }
-  .about-badge {
-    position: absolute; bottom: -1rem; right: -1rem;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px; padding: 1rem 1.5rem;
-    font-size: 0.85rem;
-  }
-  .about-badge strong { color: var(--cyan); font-family: 'Syne', sans-serif; font-size: 1.5rem; display: block; }
-  .about-stats {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem;
-  }
-  .stat-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 16px; padding: 1.25rem;
-  }
-  .stat-card .num {
-    font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 700;
-    background: linear-gradient(90deg, var(--pink), var(--yellow));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  }
-  .stat-card .label { font-size: 0.8rem; color: var(--muted); margin-top: 0.25rem; }
-
-  /* ── SKILLS ── */
-  #skills { background: var(--dark); }
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-  }
-  .skill-category {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 20px; padding: 1.75rem;
-    transition: border-color 0.3s, transform 0.3s;
-  }
-  .skill-category:hover { border-color: rgba(0,229,255,0.3); transform: translateY(-4px); }
-  .skill-cat-icon {
-    width: 44px; height: 44px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.3rem; margin-bottom: 1rem;
-  }
-  .skill-cat-title { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 1rem; margin-bottom: 1rem; }
-  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .skill-tag {
-    padding: 0.3rem 0.75rem; border-radius: 100px;
-    font-size: 0.75rem; font-weight: 500;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--border);
-    color: var(--text);
-    transition: background 0.2s, border-color 0.2s;
-  }
-  .skill-tag:hover { background: rgba(0,229,255,0.1); border-color: rgba(0,229,255,0.3); color: var(--cyan); }
-
-  /* ── EXPERIENCE ── */
-  #experience { background: var(--darker); }
-  .timeline { position: relative; padding-left: 2rem; }
-  .timeline::before {
-    content: '';
-    position: absolute; left: 0; top: 0; bottom: 0;
-    width: 1px;
-    background: linear-gradient(to bottom, var(--pink), var(--cyan), transparent);
-  }
-  .timeline-item {
-    position: relative; padding-bottom: 3rem;
-  }
-  .timeline-dot {
-    position: absolute; left: -2.4rem; top: 0.3rem;
-    width: 12px; height: 12px; border-radius: 50%;
-    background: var(--pink);
-    box-shadow: 0 0 12px var(--pink);
-    border: 2px solid var(--dark);
-  }
-  .timeline-date { font-size: 0.78rem; color: var(--cyan); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
-  .timeline-title { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.25rem; }
-  .timeline-company { color: var(--pink); font-weight: 500; margin-bottom: 0.75rem; }
-  .timeline-desc { color: var(--muted); line-height: 1.7; font-size: 0.92rem; }
-
-  /* ── PROJECTS ── */
-  #projects { background: var(--dark); }
-  .projects-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;
-  }
-  .project-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 20px; overflow: hidden;
-    transition: transform 0.3s, border-color 0.3s;
-    position: relative;
-  }
-  .project-card:hover { transform: translateY(-6px); border-color: rgba(233,30,140,0.4); }
-  .project-card-top {
-    height: 160px; position: relative; overflow: hidden;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .project-icon { font-size: 4rem; z-index: 1; }
-  .project-card-body { padding: 1.5rem; }
-  .project-status {
-    display: inline-block;
-    padding: 0.2rem 0.7rem; border-radius: 100px;
-    font-size: 0.7rem; font-weight: 600;
-    background: rgba(0,230,118,0.1); color: var(--green);
-    border: 1px solid rgba(0,230,118,0.2);
-    margin-bottom: 0.75rem;
-  }
-  .project-title { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
-  .project-desc { color: var(--muted); font-size: 0.85rem; line-height: 1.65; margin-bottom: 1rem; }
-  .project-stack { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-  .project-tech {
-    padding: 0.2rem 0.6rem; border-radius: 6px;
-    font-size: 0.7rem; font-weight: 500;
-    background: rgba(255,255,255,0.04); color: var(--muted);
-    border: 1px solid var(--border);
-  }
-
-  /* ── CONTACT ── */
-  #contact { background: var(--darker); }
-  .contact-wrap {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start;
-  }
-  .contact-links { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; }
-  .contact-link {
-    display: flex; align-items: center; gap: 1rem;
-    padding: 1rem 1.25rem; border-radius: 14px;
-    background: var(--card); border: 1px solid var(--border);
-    text-decoration: none; color: var(--text);
-    transition: border-color 0.2s, transform 0.2s;
-  }
-  .contact-link:hover { border-color: var(--cyan); transform: translateX(6px); }
-  .contact-link-icon {
-    width: 40px; height: 40px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
-    flex-shrink: 0;
-  }
-  .contact-link-text strong { display: block; font-size: 0.9rem; font-weight: 600; }
-  .contact-link-text span { font-size: 0.8rem; color: var(--muted); }
-
-  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
-  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
-  .form-group label { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
-  .form-group input,
-  .form-group textarea {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 0.85rem 1rem;
-    color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.92rem;
-    outline: none; transition: border-color 0.2s;
-    resize: none;
-  }
-  .form-group input:focus, .form-group textarea:focus { border-color: var(--cyan); }
-  .form-group textarea { height: 120px; }
-
-  /* ── FOOTER ── */
-  footer {
-    text-align: center; padding: 2rem 5%;
-    border-top: 1px solid var(--border);
-    color: var(--muted); font-size: 0.82rem;
-  }
-  footer span {
-    background: linear-gradient(90deg, var(--pink), var(--cyan));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    font-weight: 600;
-  }
-
-  /* ── FLOATING CHAT BUTTON ── */
-  #chat-fab {
-    position: fixed; bottom: 2rem; right: 2rem;
-    z-index: 999;
-    width: 62px; height: 62px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--pink), var(--purple));
-    border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 30px rgba(233,30,140,0.5);
-    transition: transform 0.3s, box-shadow 0.3s;
-    animation: fabPop 0.5s 1s cubic-bezier(0.34,1.56,0.64,1) both;
-  }
-  #chat-fab:hover { transform: scale(1.1); box-shadow: 0 0 50px rgba(233,30,140,0.7); }
-  #chat-fab svg { width: 28px; height: 28px; fill: white; }
-  .chat-pulse {
-    position: absolute; top: 0; right: 0;
-    width: 14px; height: 14px; border-radius: 50%;
-    background: var(--green);
-    border: 2px solid var(--dark);
-    animation: pulse 2s infinite;
-  }
-  @keyframes fabPop { from{opacity:0;transform:scale(0)} to{opacity:1;transform:scale(1)} }
-
-  /* ── CHAT MODAL ── */
-  #chat-modal {
-    position: fixed; bottom: 6.5rem; right: 2rem;
-    width: 380px; height: 540px;
-    z-index: 998;
-    border-radius: 24px; overflow: hidden;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
-    border: 1px solid rgba(233,30,140,0.3);
-    display: none; flex-direction: column;
-    transform: scale(0.9) translateY(20px);
-    opacity: 0;
-    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease;
-    transform-origin: bottom right;
-  }
-  #chat-modal.open {
-    display: flex;
-    transform: scale(1) translateY(0);
-    opacity: 1;
-  }
-  .chat-header {
-    padding: 1rem 1.25rem;
-    background: linear-gradient(135deg, rgba(233,30,140,0.9), rgba(124,58,237,0.9));
-    display: flex; align-items: center; gap: 0.75rem;
-  }
-  .chat-avatar {
-    width: 38px; height: 38px; border-radius: 50%;
-    background: rgba(255,255,255,0.2);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: white;
-  }
-  .chat-header-info strong { display: block; font-size: 0.9rem; font-weight: 600; color: white; }
-  .chat-header-info span { font-size: 0.75rem; color: rgba(255,255,255,0.7); }
-  .chat-online { width: 8px; height: 8px; border-radius: 50%; background: var(--green); margin-left: auto; box-shadow: 0 0 8px var(--green); }
-
-  .chat-messages {
-    flex: 1; overflow-y: auto; padding: 1rem;
-    background: #0a0d14;
-    display: flex; flex-direction: column; gap: 0.75rem;
-  }
-  .chat-messages::-webkit-scrollbar { width: 4px; }
-  .chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
-
-  .msg { max-width: 80%; padding: 0.65rem 0.9rem; border-radius: 14px; font-size: 0.85rem; line-height: 1.5; }
-  .msg.bot { background: var(--card); border: 1px solid var(--border); color: var(--text); border-bottom-left-radius: 4px; align-self: flex-start; }
-  .msg.user { background: linear-gradient(135deg, var(--pink), var(--purple)); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
-  .msg.typing span {
-    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
-    background: var(--muted); margin: 0 2px;
-    animation: typingDot 1.2s infinite;
-  }
-  .msg.typing span:nth-child(2) { animation-delay: 0.2s; }
-  .msg.typing span:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes typingDot { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
-
-  .chat-input-wrap {
-    display: flex; gap: 0.5rem; padding: 0.75rem;
-    background: #0a0d14; border-top: 1px solid var(--border);
-  }
-  #chat-input {
-    flex: 1; background: var(--card); border: 1px solid var(--border);
-    border-radius: 100px; padding: 0.6rem 1rem;
-    color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
-    outline: none;
-  }
-  #chat-input:focus { border-color: var(--pink); }
-  #chat-send {
-    width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
-    background: linear-gradient(135deg, var(--pink), var(--purple));
-    border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: transform 0.2s;
-  }
-  #chat-send:hover { transform: scale(1.1); }
-  #chat-send svg { width: 16px; height: 16px; fill: white; }
-
-  /* ── MISC ── */
-  .glow-dot {
-    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
-    margin-right: 0.4rem; vertical-align: middle;
-  }
-
-  @media (max-width: 768px) {
-    .about-grid, .contact-wrap { grid-template-columns: 1fr; }
-    .nav-links { display: none; }
-    #chat-modal { width: calc(100vw - 2rem); right: 1rem; bottom: 5.5rem; }
-    #chat-fab { right: 1rem; bottom: 1rem; }
-  }
-</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Harshini — AI Automation Engineer</title>
+<meta name="description" content="AI automation systems built in n8n: a voice agent that books, an AI hiring pipeline, a lead qualifier with retrieval and a human approval gate. Node-level detail on every one.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Azeret+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/board.css">
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <div class="logo">Harshini Lingampally</div>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-  <a href="#contact" class="btn-primary" style="font-size:0.82rem;padding:0.6rem 1.4rem;">Hire Me</a>
-</nav>
+<svg class="sprite" aria-hidden="true" focusable="false" width="0" height="0">
+  <symbol id="i-live" viewBox="0 0 16 16"><circle cx="8" cy="8" r="4.5" fill="currentColor"/></symbol>
+  <symbol id="i-built" viewBox="0 0 16 16"><rect x="3.75" y="3.75" width="8.5" height="8.5" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+  <symbol id="i-gate" viewBox="0 0 24 24"><path d="M12 3.5 19.5 6.6v5.2c0 4.1-3 7.2-7.5 8.7-4.5-1.5-7.5-4.6-7.5-8.7V6.6z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+  <symbol id="i-branch" viewBox="0 0 24 24"><path d="M12 3.6 21.4 20H2.6z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 9.6v4.4M12 16.6v.9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.2 19 12 8 18.8z" fill="currentColor"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="M5 9.5 12 16l7-6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
 
-<!-- HERO -->
-<section id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-content">
-    <div class="hero-tag">
-      <span class="glow-dot" style="background:var(--green);box-shadow:0 0 6px var(--green)"></span>
-      Available for new opportunities
-    </div>
-    <h1>
-      Hi, I'm <span class="grad-pink">Harshini</span><br/>
-      <span class="grad-cyan">AI Engineer</span> &<br/>
-      Software Developer
+<div class="board">
+
+  <header class="rail rail--top">
+    <h1 class="nameplate" aria-label="Harshini">
+      <span class="pl">H</span><span class="pl">A</span><span class="pl">R</span><span class="pl">S</span><span class="pl">H</span><span class="pl">I</span><span class="pl">N</span><span class="pl">I</span>
     </h1>
-    <p class="hero-sub">
-      Building intelligent systems at the intersection of agentic AI and backend engineering.
-      Currently at Cognizant — crafting LLM pipelines, multi-agent orchestration, and cloud-native solutions.
-    </p>
-    <div class="hero-btns">
-      <a href="#projects" class="btn-primary">View My Work</a>
-      <a href="#contact" class="btn-outline">Let's Connect</a>
+    <div class="rail__row">
+      <p class="strip strip--name">AI automation engineer · n8n agents, retrieval systems, voice</p>
+      <a class="tab" href="https://www.instagram.com/flowpilot.ai01/" rel="me noopener" target="_blank">
+        <span class="tab__plate">@flowpilot.ai01</span>
+        <span class="strip">Message me here</span>
+      </a>
     </div>
-  </div>
-  <div class="hero-scroll">
-    <div class="scroll-line"></div>
-    scroll
-  </div>
-</section>
+  </header>
 
-<!-- ABOUT -->
-<section id="about">
-  <div class="about-grid">
-    <div class="about-img-wrap">
-      <div class="about-img-box"></div>
-      <div class="about-badge">
-        <strong>1</strong>
-        Years of Experience
-      </div>
-    </div>
-    <div>
-      <p class="section-label">About Me</p>
-      <h2 class="section-title">Passionate about<br/>intelligent systems</h2>
-      <p style="color:var(--muted);line-height:1.8;margin-bottom:1.5rem;">
-        I'm a Software Developer at Cognizant with a deep passion for building AI-powered systems.
-        My work spans backend development, LLM orchestration, and agentic AI architectures.
-        I'm currently focused on mastering system design and landing a top-tier SWE role.
-      </p>
-      <p style="color:var(--muted);line-height:1.8;margin-bottom:2rem;">
-        I thrive on depth over breadth — whether it's understanding how distributed systems
-        work under the hood or building multi-agent pipelines that actually think.
-      </p>
-      <div class="about-stats">
-        <div class="stat-card"><div class="num">3</div><div class="label">Capstone AI Projects</div></div>
-        <div class="stat-card"><div class="num">2</div><div class="label">AWS Certifications</div></div>
-        <div class="stat-card"><div class="num">6+</div><div class="label">Tech Stacks</div></div>
-        <div class="stat-card"><div class="num">∞</div><div class="label">Curiosity</div></div>
-      </div>
-    </div>
-  </div>
-</section>
+  <main>
 
-<!-- SKILLS -->
-<section id="skills">
-  <p class="section-label">What I Work With</p>
-  <h2 class="section-title">Skills & Technologies</h2>
-  <p class="section-desc">From backend APIs to agentic AI pipelines — here's my toolkit.</p>
-  <div class="skills-grid">
-    <div class="skill-category">
-      <div class="skill-cat-icon" style="background:rgba(233,30,140,0.15)">🤖</div>
-      <div class="skill-cat-title">AI & LLM Engineering</div>
-      <div class="skill-tags">
-        <span class="skill-tag">Agentic AI</span>
-        <span class="skill-tag">LLM Orchestration</span>
-        <span class="skill-tag">LangChain</span>
-        <span class="skill-tag">LangGraph</span>
-        <span class="skill-tag">MCP</span>
-        <span class="skill-tag">Prompt Engineering</span>
-        <span class="skill-tag">Guardrails AI</span>
-      </div>
-    </div>
-    <div class="skill-category">
-      <div class="skill-cat-icon" style="background:rgba(0,229,255,0.15)">⚙️</div>
-      <div class="skill-cat-title">Backend & Languages</div>
-      <div class="skill-tags">
-        <span class="skill-tag">Python</span>
-        <span class="skill-tag">Java</span>
-        <span class="skill-tag">FastAPI</span>
-        <span class="skill-tag">REST APIs</span>
-        <span class="skill-tag">DSA</span>
-      </div>
-    </div>
-    <div class="skill-category">
-      <div class="skill-cat-icon" style="background:rgba(255,230,0,0.15)">☁️</div>
-      <div class="skill-cat-title">Cloud & Infrastructure</div>
-      <div class="skill-tags">
-        <span class="skill-tag">AWS Practitioner</span>
-        <span class="skill-tag">AWS Associate</span>
-        <span class="skill-tag">Cloud Deployment</span>
-        <span class="skill-tag">Serverless</span>
-      </div>
-    </div>
-    <div class="skill-category">
-      <div class="skill-cat-icon" style="background:rgba(124,58,237,0.15)">🧠</div>
-      <div class="skill-cat-title">CS Fundamentals</div>
-      <div class="skill-tags">
-        <span class="skill-tag">System Design</span>
-        <span class="skill-tag">OS</span>
-        <span class="skill-tag">Networking</span>
-        <span class="skill-tag">DBMS</span>
-        <span class="skill-tag">Concurrency</span>
-        <span class="skill-tag">Distributed Systems</span>
-      </div>
-    </div>
-  </div>
-</section>
+    <section class="region" id="systems" aria-labelledby="h-systems">
+      <h2 class="region__head" id="h-systems">Systems in service</h2>
+      <p class="region__note">Seven built, three switched on right now. Open any row for the chain it actually executes — trigger, steps, gates, and the one decision that makes it work.</p>
 
-<!-- EXPERIENCE -->
-<section id="experience">
-  <p class="section-label">My Journey</p>
-  <h2 class="section-title">Experience</h2>
-  <p class="section-desc">Where I've built, learned, and grown.</p>
-  <div class="timeline">
-    <div class="timeline-item">
-      <div class="timeline-dot"></div>
-      <div class="timeline-date">2025(November) — Present</div>
-      <div class="timeline-title">Software Developer</div>
-      <div class="timeline-company">Cognizant Technology Solutions</div>
-      <div class="timeline-desc">
-        Building production-grade AI pipelines and backend services. Working with LangChain,
-        LangGraph, and MCP for agentic system design. Deploying cloud-native solutions on AWS.
-        Integrating LLM capabilities into enterprise software workflows.
-      </div>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-dot" style="background:var(--cyan);box-shadow:0 0 12px var(--cyan)"></div>
-      <div class="timeline-date">College</div>
-      <div class="timeline-title">CMR Engineering College</div>
-      <div class="timeline-company">Academic Achievement</div>
-      <div class="timeline-desc">
-         Completed Engineering in Information Technology.Trained in the Smart Interview program focusing on competitive DSA preparation.
-        Strengthened problem-solving skills across data structures, algorithms, and system thinking.
-      </div>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-dot" style="background:var(--yellow);box-shadow:0 0 12px var(--yellow)"></div>
-      <div class="timeline-date">Ongoing</div>
-      <div class="timeline-title">AWS Certified</div>
-      <div class="timeline-company">Amazon Web Services</div>
-      <div class="timeline-desc">
-        Earned AWS Cloud Practitioner and pursuing Solutions Architect Associate certification.
-        Hands-on experience with core AWS services for cloud deployment.
-      </div>
-    </div>
-  </div>
-</section>
+      <ol class="register" role="list">
 
-<!-- PROJECTS -->
-<section id="projects">
-  <p class="section-label">What I'm Building</p>
-  <h2 class="section-title">Capstone Projects</h2>
-  <p class="section-desc">Three agentic AI systems pushing the boundaries of autonomous software.</p>
-  <div class="projects-grid">
-    <div class="project-card">
-      <div class="project-card-top" style="background:linear-gradient(135deg,#1a0520,#0d1117)">
-        <div class="project-icon">🚨</div>
-      </div>
-      <div class="project-card-body">
-        <span class="project-status">🔨 In Development</span>
-        <div class="project-title">AI Incident Command Center</div>
-        <div class="project-desc">Autonomous SRE platform simulating real-time incident detection, root cause analysis, and self-healing remediation using multi-agent orchestration.</div>
-        <div class="project-stack">
-          <span class="project-tech">LangGraph</span>
-          <span class="project-tech">MCP</span>
-          <span class="project-tech">FastAPI</span>
-          <span class="project-tech">AWS</span>
-          <span class="project-tech">Python</span>
-        </div>
-      </div>
-    </div>
-    <div class="project-card">
-      <div class="project-card-top" style="background:linear-gradient(135deg,#001a1f,#0d1117)">
-        <div class="project-icon">🔍</div>
-      </div>
-      <div class="project-card-body">
-        <span class="project-status">🔨 In Development</span>
-        <div class="project-title">Autonomous Code Review Pipeline</div>
-        <div class="project-desc">LLM-powered pipeline that autonomously reviews pull requests for bugs, security vulnerabilities, and coding best practices — with guardrails built in.</div>
-        <div class="project-stack">
-          <span class="project-tech">LangChain</span>
-          <span class="project-tech">Guardrails</span>
-          <span class="project-tech">Python</span>
-          <span class="project-tech">FastAPI</span>
-          <span class="project-tech">GitHub API</span>
-        </div>
-      </div>
-    </div>
-    <div class="project-card">
-      <div class="project-card-top" style="background:linear-gradient(135deg,#1a1500,#0d1117)">
-        <div class="project-icon">📈</div>
-      </div>
-      <div class="project-card-body">
-        <span class="project-status">🔨 In Development</span>
-        <div class="project-title">Multi-Agent Financial Terminal</div>
-        <div class="project-desc">Real-time financial research terminal powered by specialized agents for data retrieval, analysis, sentiment tracking, and research synthesis.</div>
-        <div class="project-stack">
-          <span class="project-tech">LangGraph</span>
-          <span class="project-tech">LLM APIs</span>
-          <span class="project-tech">FastAPI</span>
-          <span class="project-tech">AWS</span>
-          <span class="project-tech">Streamlit</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section id="contact">
-  <div class="contact-wrap">
-    <div>
-      <p class="section-label">Get In Touch</p>
-      <h2 class="section-title">Let's Work<br/>Together</h2>
-      <p style="color:var(--muted);line-height:1.7;margin-bottom:2rem;">
-        I'm open to exciting SWE roles, AI collaborations, and interesting problems.
-        Feel free to reach out — I respond fast!
-      </p>
-      <div class="contact-links">
-        <a href="mailto:harshinilingampally0928@gmail.com" class="contact-link">
-          <div class="contact-link-icon" style="background:rgba(233,30,140,0.15)">📧</div>
-          <div class="contact-link-text">
-            <strong>Email</strong>
-            <span>harshinilingampally0928@gmail.com</span>
-          </a>
-            <a href="tel:+917569341115" class="contact-link">
-            <div class="contact-link-icon" style="background:rgba(0,230,118,0.15)">📱</div>
-            <div class="contact-link-text">
-            <strong>Phone / WhatsApp</strong>
-            <span>+917569341115</span>
-            </div>
-        </a>
+        <li class="row" data-row>
+          <h3 class="row__h">
+            <button class="face" type="button" aria-expanded="false" aria-controls="p1">
+              <span class="face__no">01</span>
+              <span class="face__name">Riya — the voice agent that books</span>
+              <span class="face__fig"><span class="fig" data-fig>1s</span><span class="strip">Spoken reply, before the AI runs</span></span>
+              <span class="status status--live"><svg class="status__mark"><use href="#i-live"/></svg>Live</span>
+              <span class="face__open"><span class="face__openlabel">Open</span><svg class="chev"><use href="#i-chev"/></svg></span>
+            </button>
+          </h3>
+          <div class="panel" id="p1" hidden>
+            <p class="lede">A Vapi voice agent answers the call, collects what the caller needs, and calls one webhook tool — <code>save_and_book</code> — once, at the end of the call. Everything after that is n8n.</p>
+            <ol class="chain" role="list">
+              <li class="link"><span class="link__node">Vapi tool call</span><span class="link__type">Webhook · POST</span><p>Riya calls her one tool at the end of the conversation, carrying the caller's goal, level, hours a week and chosen slot.</p></li>
+              <li class="link"><span class="link__node">Read the call</span><span class="link__type">Code</span><p>Unpacks the tool-call arguments into one flat record the rest of the chain can read.</p></li>
+              <li class="link"><span class="link__node">Save the goal</span><span class="link__type">Google Sheets · append</span><p>Writes the row.</p></li>
+              <li class="link"><span class="link__node">Book the session</span><span class="link__type">Google Calendar · create</span><p>Creates the event in the slot the caller picked.</p></li>
+              <li class="link link--gate"><span class="link__node"><svg class="link__mark"><use href="#i-gate"/></svg>Reply to Riya</span><span class="link__type">Respond to Webhook</span><p>Returns the result to Vapi in about a second — while the call is still open and the caller is still listening.</p></li>
+              <li class="link"><span class="link__node">Coach</span><span class="link__type">AI Agent · Gemini + output parser</span><p>Writes a personalised plan in a fixed format. Runs <em>after</em> the reply has already gone.</p></li>
+              <li class="link"><span class="link__node">Send the plan</span><span class="link__type">Gmail</span><p>Emails it to the caller.</p></li>
+            </ol>
+            <p class="clever"><b>The decision that makes it work.</b> Generation takes seconds, and a caller on the phone will not wait seconds. The webhook response is ordered <em>before</em> the AI steps, so the caller hears a confirmation immediately and the written plan lands in their inbox a moment later.</p>
+            <p class="scope">Built for a skill-coaching desk. The same shape fits clinics, salons, studios — any business that runs on bookings.</p>
+            <ul class="chips" role="list"><li>Vapi</li><li>n8n</li><li>Google Sheets</li><li>Google Calendar</li><li>Gemini</li><li>Gmail</li></ul>
           </div>
-    
-        <a href="https://www.linkedin.com/in/harshini-lingampally-855211231?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" class="contact-link">
-          <div class="contact-link-icon" style="background:rgba(0,229,255,0.15)">💼</div>
-          <div class="contact-link-text">
-            <strong>LinkedIn</strong>
-            <span>linkedin.com/in/harshini</span>
+        </li>
+
+        <li class="row" data-row>
+          <h3 class="row__h">
+            <button class="face" type="button" aria-expanded="false" aria-controls="p2">
+              <span class="face__no">02</span>
+              <span class="face__name">The AI hiring pipeline</span>
+              <span class="face__fig"><span class="fig" data-fig>100</span><span class="strip">Point rubric, six weighted criteria</span></span>
+              <span class="status status--built"><svg class="status__mark"><use href="#i-built"/></svg>Built</span>
+              <span class="face__open"><span class="face__openlabel">Open</span><svg class="chev"><use href="#i-chev"/></svg></span>
+            </button>
+          </h3>
+          <div class="panel" id="p2" hidden>
+            <p class="lede">Applications arrive as whatever people send — a message, a form, a mail. What comes out is a scored, reasoned shortlist with interviews already on the calendar.</p>
+            <ol class="chain" role="list">
+              <li class="link"><span class="link__node">Parse the application</span><span class="link__type">Code</span><p>Free text in, structured record out: years of experience, current role, skills, expectation, notice period, location.</p></li>
+              <li class="link"><span class="link__node">Score against the role</span><span class="link__type">Rubric · 100 points</span><p>Fixed weights, same for everyone: must-have skills <b>40</b> · experience band <b>20</b> · salary against budget <b>15</b> · good-to-have <b>10</b> · already in the city <b>8</b> · notice period <b>7</b>.</p></li>
+              <li class="link"><span class="link__node">Log the verdict</span><span class="link__type">Screening log</span><p>Every candidate leaves with a score, a verdict and a written reason — shortlisted, talent pool, or not progressing. Nothing is a silent no.</p></li>
+              <li class="link link--gate"><span class="link__node"><svg class="link__mark"><use href="#i-gate"/></svg>Bias audit</span><span class="link__type">31 terms checked</span><p>Thirty-one protected-attribute terms swept across the job description and every panel note. Scoring touches five things only: skills, years, salary against budget, location, notice.</p></li>
+              <li class="link"><span class="link__node">Book the interview</span><span class="link__type">Google Calendar · create</span><p>Fixed slots, 45 minutes, three days out — with the briefing inside the invite: the score, one strength to confirm, one thing to probe.</p></li>
+            </ol>
+            <p class="clever"><b>The decision that makes it work.</b> A candidate scored <b>57</b> against the senior role scored <b>87</b> against the mid-band one. Same person, same skills — the band was wrong, not the candidate. The pipeline re-matches against open roles before it rejects anyone, which is the difference between a filter and a recruiter.</p>
+            <p class="scope">Client, candidates and salary bands are withheld here. The rubric, the weights and the re-match are the real ones.</p>
+            <ul class="chips" role="list"><li>n8n</li><li>Scoring code</li><li>Google Sheets</li><li>Google Calendar</li></ul>
           </div>
-        </a>
-        <a href="https://github.com/Harshinilingampally" target="_blank" class="contact-link">
-          <div class="contact-link-icon" style="background:rgba(124,58,237,0.15)">🐙</div>
-          <div class="contact-link-text">
-            <strong>GitHub</strong>
-            <span>github.com/Harshinilingampally</span>
+        </li>
+
+        <li class="row" data-row>
+          <h3 class="row__h">
+            <button class="face" type="button" aria-expanded="false" aria-controls="p3">
+              <span class="face__no">03</span>
+              <span class="face__name">The AI lead qualifier</span>
+              <span class="face__fig"><span class="fig" data-fig>98</span><span class="strip">Top lead score, escalated to a human</span></span>
+              <span class="status status--live"><svg class="status__mark"><use href="#i-live"/></svg>Live</span>
+              <span class="face__open"><span class="face__openlabel">Open</span><svg class="chev"><use href="#i-chev"/></svg></span>
+            </button>
+          </h3>
+          <div class="panel" id="p3" hidden>
+            <p class="lede">Five workflows around one shared brain. A lead arrives, gets screened, scored and answered with a grounded draft — and nothing reaches a customer without a human click.</p>
+            <ol class="chain" role="list">
+              <li class="link"><span class="link__node">Intake and screen</span><span class="link__type">Webhook → Code → If</span><p>Normalises the lead, then drops obvious junk into a rejection log <em>before</em> a single AI call is paid for.</p></li>
+              <li class="link"><span class="link__node">Match prior contact</span><span class="link__type">Data table</span><p>Looks up history, summarises it, upserts the record. A third submission from the same buyer is known to be a third submission.</p></li>
+              <li class="link"><span class="link__node">Score and draft</span><span class="link__type">Execute Workflow · 16 nodes</span><p>The shared scorer: retrieves brand-knowledge chunks <em>and recorded human edits</em> from a vector store, scores against a rubric, then drafts a grounded reply with real products, real bulk terms and real lead times.</p></li>
+              <li class="link link--branch"><span class="link__node"><svg class="link__mark"><use href="#i-branch"/></svg>Validate, repair once, fail safe</span><span class="link__type">needs_triage</span><p>The scorer checks its own output and repairs it one time. If it still does not hold, the lead goes to <code>needs_triage</code> for a person — it never ships a guess.</p></li>
+              <li class="link link--gate"><span class="link__node"><svg class="link__mark"><use href="#i-gate"/></svg>Approve and send</span><span class="link__type">Single-use token</span><p>The approval link works exactly once. Replays are refused, expired links are refused, and only then does Gmail send — recording message and thread ids on the way out.</p></li>
+              <li class="link"><span class="link__node">Learn from the edit</span><span class="link__type">Data table</span><p>If the operator edited the draft before approving, that edit is captured as a style example and retrieved by later drafts. The loop closes.</p></li>
+              <li class="link"><span class="link__node">Replies and follow-ups</span><span class="link__type">Gmail Trigger + hourly schedule</span><p>Two clocks in one workflow: inbound replies are matched to their sent thread and stop the sequence; an hourly sweep re-scores anyone silent for three days and queues a follow-up through the same approval gate.</p></li>
+            </ol>
+            <p class="clever"><b>The decision that makes it work.</b> One scorer, two callers — intake and the follow-up sweep both execute the same sub-workflow, so a follow-up is judged by the same brain that judged first contact. The top lead it has scored, <b>98/100</b>, was escalated rather than answered: the engraving lead time did not fit the customer's delivery date, and that is a founder's call, not a draft's.</p>
+            <p class="scope">Lead names, addresses and the brand's catalogue are withheld. Scores, rubric behaviour and the gate are the real ones.</p>
+            <ul class="chips" role="list"><li>n8n · 5 workflows</li><li>Vector store</li><li>OpenAI embeddings</li><li>Data Tables</li><li>Gmail</li></ul>
           </div>
-        </a>
+        </li>
+
+        <li class="row" data-row>
+          <h3 class="row__h">
+            <button class="face" type="button" aria-expanded="false" aria-controls="p4">
+              <span class="face__no">04</span>
+              <span class="face__name">Telegram stock analyst</span>
+              <span class="face__fig"><span class="fig" data-fig>20s</span><span class="strip">Message to full analysis</span></span>
+              <span class="status status--built"><svg class="status__mark"><use href="#i-built"/></svg>Built</span>
+              <span class="face__open"><span class="face__openlabel">Open</span><svg class="chev"><use href="#i-chev"/></svg></span>
+            </button>
+          </h3>
+          <div class="panel" id="p4" hidden>
+            <p class="lede">Send a stock name to a Telegram bot and get a live chart plus a full technical read before you have put the phone down.</p>
+            <ol class="chain" role="list">
+              <li class="link"><span class="link__node">Telegram trigger</span><span class="link__type">Message</span><p>Wakes on your message and keeps the thread's memory, so you can keep asking in the same chat.</p></li>
+              <li class="link"><span class="link__node">Decide what is needed</span><span class="link__type">AI Agent · Gemini</span><p>The agent picks its own tools for the question asked rather than running a fixed script.</p></li>
+              <li class="link"><span class="link__node">Search live news</span><span class="link__type">Tavily</span><p>So the read is about this week, not the training data.</p></li>
+              <li class="link link--gate"><span class="link__node"><svg class="link__mark"><use href="#i-gate"/></svg>Chart as a tool</span><span class="link__type">TradingView → Telegram</span><p>The chart tool posts straight into the chat <em>while the agent is still thinking</em>. The user sees something within seconds instead of watching a typing dot.</p></li>
+              <li class="link"><span class="link__node">Return the analysis</span><span class="link__type">Telegram</span><p>Trend, support and resistance, RSI, the news that matters and the risk.</p></li>
+            </ol>
+            <p class="clever"><b>The decision that makes it work.</b> Giving a tool a side effect. The chart is not waiting for the answer to be finished — it ships mid-thought, which is the whole difference between a bot that feels fast and one that feels broken.</p>
+            <ul class="chips" role="list"><li>n8n</li><li>Gemini</li><li>Tavily</li><li>TradingView</li><li>Telegram</li></ul>
+          </div>
+        </li>
+
+        <li class="row" data-row>
+          <h3 class="row__h">
+            <button class="face" type="button" aria-expanded="false" aria-controls="p5">
+              <span class="face__no">05</span>
+              <span class="face__name">Channel Pulse — two platforms, one record</span>
+              <span class="face__fig"><span class="fig" data-fig>30m</span><span class="strip">Collection interval, not request time</span></span>
+              <span class="status status--built"><svg class="status__mark"><use href="#i-built"/></svg>Built</span>
+              <span class="face__open"><span class="face__openlabel">Open</span><svg class="chev"><use href="#i-chev"/></svg></span>
+            </button>
+          </h3>
+          <div class="panel" id="p5" hidden>
+            <p class="lede">Instagram and YouTube in one dashboard, with no server, no database bill and no rate limit to hit.</p>
+            <ol class="chain" role="list">
+              <li class="link"><span class="link__node">Collect on a schedule</span><span class="link__type">Every 30 minutes</span><p>Pulls Instagram account data, daily insights, follower demographics and recent media; YouTube channel stats, the uploads playlist, video stats and two Analytics reports.</p></li>
+              <li class="link"><span class="link__node">Reconcile</span><span class="link__type">Code</span><p>Two APIs that agree on nothing are reshaped into one record with a fixed contract.</p></li>
+              <li class="link"><span class="link__node">Write a snapshot</span><span class="link__type">Data table</span><p>One row to read instantly, plus one row of history a day so the trend survives.</p></li>
+              <li class="link link--gate"><span class="link__node"><svg class="link__mark"><use href="#i-gate"/></svg>Serve from the snapshot</span><span class="link__type">Webhook · fixed JSON</span><p>The dashboard reads the stored row, never the platform APIs. It loads instantly and cannot be rate limited by a visitor refreshing it.</p></li>
+            </ol>
+            <p class="clever"><b>The decision that makes it work.</b> Separating collection from serving. Most dashboards call the API when you open them, which is exactly when the API says no. Here the expensive work runs on a clock nobody is watching, and the front end only ever reads one row.</p>
+            <ul class="chips" role="list"><li>n8n · 2 workflows</li><li>Instagram Graph</li><li>YouTube Data + Analytics</li><li>Data Tables</li></ul>
+          </div>
+        </li>
+
+        <li class="row" data-row>
+          <h3 class="row__h">
+            <button class="face" type="button" aria-expanded="false" aria-controls="p6">
+              <span class="face__no">06</span>
+              <span class="face__name">AI video factory</span>
+              <span class="face__fig"><span class="fig" data-fig>3</span><span class="strip">Services in one chain, one approval</span></span>
+              <span class="status status--built"><svg class="status__mark"><use href="#i-built"/></svg>Built</span>
+              <span class="face__open"><span class="face__openlabel">Open</span><svg class="chev"><use href="#i-chev"/></svg></span>
+            </button>
+          </h3>
+          <div class="panel" id="p6" hidden>
+            <p class="lede">A form-driven pipeline: category, description and assets in; a scripted, subtitled video out.</p>
+            <ol class="chain" role="list">
+              <li class="link"><span class="link__node">Form intake</span><span class="link__type">n8n Form</span><p>Category, description and the assets to use.</p></li>
+              <li class="link"><span class="link__node">Write the script</span><span class="link__type">Gemini</span><p>Scripted to the category, not to a generic template.</p></li>
+              <li class="link"><span class="link__node">Speak it</span><span class="link__type">ElevenLabs · cloned voice</span><p>Her own voice, so the output matches everything else on the channel.</p></li>
+              <li class="link"><span class="link__node">Render</span><span class="link__type">Creatomate</span><p>Subtitled, sized for vertical.</p></li>
+              <li class="link link--gate"><span class="link__node"><svg class="link__mark"><use href="#i-gate"/></svg>Approve in Telegram</span><span class="link__type">Human in the loop</span><p>Nothing publishes until a person says yes, in a chat they already have open.</p></li>
+            </ol>
+            <p class="clever"><b>The decision that makes it work.</b> Approval is a node, not a convention. The pipeline cannot be "accidentally automatic", which is what makes it safe to leave switched on.</p>
+            <ul class="chips" role="list"><li>n8n</li><li>Gemini</li><li>ElevenLabs</li><li>Creatomate</li><li>Telegram</li></ul>
+          </div>
+        </li>
+
+        <li class="row" data-row>
+          <h3 class="row__h">
+            <button class="face" type="button" aria-expanded="false" aria-controls="p7">
+              <span class="face__no">07</span>
+              <span class="face__name">Comment-to-link helper</span>
+              <span class="face__fig"><span class="fig" data-fig>5</span><span class="strip">Nodes, no AI, no dead ends</span></span>
+              <span class="status status--live"><svg class="status__mark"><use href="#i-live"/></svg>Live</span>
+              <span class="face__open"><span class="face__openlabel">Open</span><svg class="chev"><use href="#i-chev"/></svg></span>
+            </button>
+          </h3>
+          <div class="panel" id="p7" hidden>
+            <p class="lede">A viewer comments the keyword under a reel; this decides which link belongs to that reel and sends it back, in one round trip.</p>
+            <ol class="chain" role="list">
+              <li class="link"><span class="link__node">Link request</span><span class="link__type">Webhook · POST</span><p>ManyChat asks: this viewer, this video, this comment.</p></li>
+              <li class="link"><span class="link__node">Clean the request</span><span class="link__type">Set</span><p>Trims and lowercases the video name, carries the viewer's id and username, and sets the fallback link.</p></li>
+              <li class="link"><span class="link__node">Look up the link</span><span class="link__type">Data table · get</span><p>One row per video. No AI, because there is nothing here to reason about.</p></li>
+              <li class="link"><span class="link__node">Log the commenter</span><span class="link__type">Data table · insert</span><p>Captured as a lead with their first comment — and set to continue on error, so a logging failure can never cost the viewer their reply.</p></li>
+              <li class="link link--gate"><span class="link__node"><svg class="link__mark"><use href="#i-gate"/></svg>Reply with the right link</span><span class="link__type">Respond to Webhook</span><p>The matched link, or the profile link when a video has none. Nobody gets a dead DM.</p></li>
+            </ol>
+            <p class="clever"><b>The decision that makes it work.</b> Knowing when not to use AI. Five nodes, a lookup table and a fallback — and the only two failure modes that existed were designed out rather than monitored.</p>
+            <ul class="chips" role="list"><li>n8n</li><li>ManyChat</li><li>Data Tables</li></ul>
+          </div>
+        </li>
+
+      </ol>
+
+      <dl class="legend legend--base">
+        <div><dt><span class="status status--live"><svg class="status__mark"><use href="#i-live"/></svg>Live</span></dt><dd>Switched on in n8n Cloud, running on its own trigger.</dd></div>
+        <div><dt><span class="status status--built"><svg class="status__mark"><use href="#i-built"/></svg>Built</span></dt><dd>Built and demonstrated end to end, currently switched off.</dd></div>
+      </dl>
+      <p class="tally">
+        <span class="tally__cell"><b>7</b> systems</span>
+        <span class="tally__cell"><b>3</b> live</span>
+        <span class="tally__cell"><b>5</b> workflows in the biggest one</span>
+        <span class="tally__cell tally__cell--signal"><b>1</b> lead escalated to a human rather than answered</span>
+      </p>
+    </section>
+
+    <section class="region" id="screen" aria-labelledby="h-screen">
+      <h2 class="region__head" id="h-screen">On screen</h2>
+      <p class="region__note">Seven reels, written from the workflows themselves and rendered frame by frame. Every graphic in them is keyed to a word in the voice track, never to a guess.</p>
+      <ul class="shelf" role="list">
+        <li class="tape tape--feature"><button class="tape__face" type="button" data-video="media/voice-agent.mp4" data-poster="media/voice-agent.jpg"><img src="media/voice-agent.jpg" alt="" width="720" height="1280" loading="lazy" decoding="async"><span class="tape__play"><svg><use href="#i-play"/></svg></span><span class="tape__title">The voice agent that books</span><span class="strip">0:54</span><span class="tape__blurb">Riya takes the call, writes the row, books the slot and answers the caller before the model has finished thinking. Fifty-four seconds, start to finish.</span></button></li>
+        <li class="tape"><button class="tape__face" type="button" data-video="media/hiring-pipeline.mp4" data-poster="media/hiring-pipeline.jpg"><img src="media/hiring-pipeline.jpg" alt="" width="720" height="1280" loading="lazy" decoding="async"><span class="tape__play"><svg><use href="#i-play"/></svg></span><span class="tape__title">The AI hiring pipeline</span><span class="strip">1:50</span><span class="tape__blurb">Parses the application, scores it out of 100 and books the interview with the briefing inside the invite.</span></button></li>
+        <li class="tape"><button class="tape__face" type="button" data-video="media/lead-qualifier.mp4" data-poster="media/lead-qualifier.jpg"><img src="media/lead-qualifier.jpg" alt="" width="720" height="1280" loading="lazy" decoding="async"><span class="tape__play"><svg><use href="#i-play"/></svg></span><span class="tape__title">The AI lead qualifier</span><span class="strip">2:00</span><span class="tape__blurb">Screens the lead, drafts a grounded reply, and refuses to send it until a person clicks approve.</span></button></li>
+        <li class="tape"><button class="tape__face" type="button" data-video="media/stock-analysis.mp4" data-poster="media/stock-analysis.jpg"><img src="media/stock-analysis.jpg" alt="" width="720" height="1280" loading="lazy" decoding="async"><span class="tape__play"><svg><use href="#i-play"/></svg></span><span class="tape__title">Telegram stock analyst</span><span class="strip">0:50</span><span class="tape__blurb">Ask in Telegram; a Gemini agent picks its own tools, pulls live news and charts the stock mid-thought.</span></button></li>
+        <li class="tape"><button class="tape__face" type="button" data-video="media/channel-pulse.mp4" data-poster="media/channel-pulse.jpg"><img src="media/channel-pulse.jpg" alt="" width="720" height="1280" loading="lazy" decoding="async"><span class="tape__play"><svg><use href="#i-play"/></svg></span><span class="tape__title">Channel Pulse</span><span class="strip">0:59</span><span class="tape__blurb">Two platforms reconciled into one record, served from a snapshot so the dashboard cannot be rate limited.</span></button></li>
+        <li class="tape"><button class="tape__face" type="button" data-video="media/n8n-core-concepts.mp4" data-poster="media/n8n-core-concepts.jpg"><img src="media/n8n-core-concepts.jpg" alt="" width="720" height="1280" loading="lazy" decoding="async"><span class="tape__play"><svg><use href="#i-play"/></svg></span><span class="tape__title">Six patterns for robust workflows</span><span class="strip">1:16</span><span class="tape__blurb">Routing, parallelisation, evaluator-optimizer, human in the loop, error workflows, the dynamic brain.</span></button></li>
+        <li class="tape"><button class="tape__face" type="button" data-video="media/youtube-agent-skill.mp4" data-poster="media/youtube-agent-skill.jpg"><img src="media/youtube-agent-skill.jpg" alt="" width="720" height="1280" loading="lazy" decoding="async"><span class="tape__play"><svg><use href="#i-play"/></svg></span><span class="tape__title">YouTube agent skill</span><span class="strip">0:46</span><span class="tape__blurb">Fourteen sub-skills for Claude: scripts, hooks, titles, thumbnail briefs, competitor analysis in parallel.</span></button></li>
+      </ul>
+      <a class="shelf__rail" href="https://www.instagram.com/flowpilot.ai01/" rel="me noopener" target="_blank">
+        <span>All seven run on Instagram</span>
+        <span class="shelf__rail-handle">@flowpilot.ai01</span>
+      </a>
+    </section>
+
+    <section class="region" id="craft" aria-labelledby="h-craft">
+      <h2 class="region__head" id="h-craft">What it is built on</h2>
+      <p class="region__note">Learned on the way to shipping the systems above — each line below is in one of them.</p>
+      <div class="racks">
+        <div class="rack">
+          <h3 class="rack__h">Retrieval</h3>
+          <p class="rack__note">The lead qualifier's brain. A brand knowledge base — catalogue, policies, bulk terms, objections, voice — chunked, embedded and indexed, then retrieved at draft time alongside every edit a human has made, so the next draft sounds like the last approved one.</p>
+          <ul class="plates" role="list"><li>Document chunking</li><li>OpenAI embeddings</li><li>Vector store indexing</li><li>Grounded drafting</li><li>Human-edit feedback loop</li><li>Fail safe over guessing</li></ul>
+        </div>
+        <div class="rack">
+          <h3 class="rack__h">Agents</h3>
+          <p class="rack__note">Agents that choose tools, keep memory, check their own work and know when to stop and ask a person.</p>
+          <ul class="plates" role="list"><li>Tool calling</li><li>Output parsers</li><li>Conversation memory</li><li>Evaluator and repair</li><li>Human in the loop</li><li>Shared sub-workflow brains</li></ul>
+        </div>
+        <div class="rack">
+          <h3 class="rack__h">Platform and safety</h3>
+          <p class="rack__note">The unglamorous half: what happens on a replay, an expiry, a rate limit, a logging failure, a bad model response.</p>
+          <ul class="plates" role="list"><li>n8n Cloud</li><li>Data Tables</li><li>Webhooks and responses</li><li>Single-use token gates</li><li>Error workflows</li><li>Snapshot serving</li></ul>
+        </div>
+        <div class="rack">
+          <h3 class="rack__h">Voice and media</h3>
+          <p class="rack__note">Systems that speak, and the rendering pipeline that explains them.</p>
+          <ul class="plates" role="list"><li>Vapi voice agents</li><li>ElevenLabs cloned voice</li><li>Creatomate</li><li>Frame-accurate renders</li><li>Telegram and ManyChat</li></ul>
+        </div>
+        <div class="rack">
+          <h3 class="rack__h">Code</h3>
+          <p class="rack__note">Where a workflow is the wrong tool.</p>
+          <ul class="plates" role="list"><li>Python</li><li>FastAPI</li><li>Alembic migrations</li><li>LangChain</li><li>REST APIs</li><li>Google Workspace APIs</li></ul>
+        </div>
       </div>
-    </div>
-    <div>
-      <form class="contact-form" onsubmit="handleSubmit(event)">
-        <div class="form-group">
-          <label>Your Name</label>
-          <input type="text" placeholder="John Doe" />
-        </div>
-        <div class="form-group">
-          <label>Email Address</label>
-          <input type="email" placeholder="john@example.com" />
-        </div>
-        <div class="form-group">
-          <label>Message</label>
-          <textarea placeholder="Tell me about the opportunity..."></textarea>
-        </div>
-        <button type="submit" class="btn-primary" style="border:none;cursor:pointer;font-family:'DM Sans',sans-serif;">
-          Send Message ✉️
-        </button>
-      </form>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- FOOTER -->
-<footer>
-  <p>Designed & built by <span>Harshini</span> · 2024 · All rights reserved</p>
-</footer>
+    <section class="region" id="also" aria-labelledby="h-also">
+      <h2 class="region__head" id="h-also">Also on the bench</h2>
+      <ul class="bench" role="list">
+        <li class="bench__item"><h3>YouTube agent skill for Claude</h3><p>Fourteen sub-skills in one install: scripts, hooks, titles, thumbnail briefs, repurposing and strategy. Competitor analysis runs four agents in parallel and returns ten ranked video ideas. Open source.</p></li>
+        <li class="bench__item"><h3>Six patterns for robust AI workflows</h3><p>Routing, parallelisation, evaluator-optimizer, human in the loop, error workflows and the dynamic brain — with the exact nodes and settings for each, including the one most builders get wrong: branches in n8n do not run at the same time.</p></li>
+        <li class="bench__item"><h3>LangChain agent lab</h3><p>A simple agent, a tool-calling agent and a memory-backed agent in Python — the groundwork the n8n agents sit on.</p></li>
+        <li class="bench__item"><h3>FastAPI service kit</h3><p>A REST service with Alembic migrations and a layered core, for the jobs a workflow should not be doing.</p></li>
+        <li class="bench__item"><h3>Career chatbot</h3><p>A Python chatbot that answers from a personal knowledge file rather than from the model's memory.</p></li>
+      </ul>
+    </section>
 
-<!-- FLOATING CHAT BUTTON -->
-<button id="chat-fab" onclick="toggleChat()" aria-label="Chat with Harshini">
-  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
-  </svg>
-  <div class="chat-pulse"></div>
-</button>
+  </main>
 
-<!-- CHAT MODAL -->
-<div id="chat-modal">
-  <div class="chat-header">
-    <div class="chat-avatar">H</div>
-    <div class="chat-header-info">
-      <strong>Harshini</strong>
-      <span>Software Developer & AI Engineer</span>
+  <footer class="rail rail--bottom">
+    <div class="rail__left">
+      <p class="foot-note">Client names, candidate details and workflow internals are withheld. Every figure on this board was measured on a system that has run — none is an estimate.</p>
     </div>
-    <div class="chat-online"></div>
-  </div>
-  <div class="chat-messages" id="chat-messages">
-    <div class="msg bot">
-      Hey! 👋 I'm Harshini. Ask me anything about my background, projects, or skills!
-    </div>
-  </div>
-  <div class="chat-input-wrap">
-    <input type="text" id="chat-input" placeholder="Ask me anything..." onkeypress="handleKey(event)" />
-    <button id="chat-send" onclick="sendMessage()" aria-label="Send">
-      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-    </button>
-  </div>
+    <a class="plaque" href="https://www.instagram.com/flowpilot.ai01/" rel="me noopener" target="_blank">
+      <span class="plaque__line">Message</span>
+      <span class="plaque__handle">@flowpilot.ai01</span>
+    </a>
+  </footer>
+
 </div>
 
-<script>
-  // ── Chat toggle ──
-  let chatOpen = false;
-  function toggleChat() {
-    chatOpen = !chatOpen;
-    const modal = document.getElementById('chat-modal');
-    if (chatOpen) {
-      modal.style.display = 'flex';
-      setTimeout(() => modal.classList.add('open'), 10);
-    } else {
-      modal.classList.remove('open');
-      setTimeout(() => modal.style.display = 'none', 300);
-    }
-  }
-
-  function handleKey(e) {
-    if (e.key === 'Enter') sendMessage();
-  }
-
-  // ── Chat history ──
-  let history = [];
-
-  // ── Send message ──
-  async function sendMessage() {
-    const input = document.getElementById('chat-input');
-    const text = input.value.trim();
-    if (!text) return;
-    input.value = '';
-
-    addMsg(text, 'user');
-    history.push({ role: 'user', content: text });
-
-    // Typing indicator
-    const typingId = addTyping();
-
-    try {
-      const response = await fetch('YOUR_STREAMLIT_URL/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, history: history.slice(0, -1) })
-      });
-
-      removeTyping(typingId);
-
-      if (response.ok) {
-        const data = await response.json();
-        const reply = data.reply;
-        addMsg(reply, 'bot');
-        history.push({ role: 'assistant', content: reply });
-      } else {
-        // Fallback: simulate reply if API not connected yet
-        simulateReply(text, typingId);
-      }
-    } catch (e) {
-      removeTyping(typingId);
-      simulateReply(text);
-    }
-  }
-
-  // ── Simulated replies (works without backend) ──
-  function simulateReply(text) {
-    const t = text.toLowerCase();
-    let reply = "That's a great question! Feel free to reach out via the contact section for more details.";
-
-    if (t.includes('skill') || t.includes('tech') || t.includes('stack'))
-      reply = "I work with Python, Java, FastAPI, LangChain, LangGraph, MCP, and AWS. My main focus right now is agentic AI systems and LLM orchestration! 🚀";
-    else if (t.includes('project'))
-      reply = "I'm building 3 capstone projects: an AI Incident Command Center, an Autonomous Code Review Pipeline, and a Multi-Agent Financial Terminal. All agentic AI! 🤖";
-    else if (t.includes('work') || t.includes('job') || t.includes('cognizant'))
-      reply = "I'm currently a Software Developer at Cognizant, working on AI pipelines and backend systems. I'm also preparing for top-tier SWE roles! 💼";
-    else if (t.includes('aws') || t.includes('cloud'))
-      reply = "Yes! I'm AWS Cloud Practitioner certified and working towards Solutions Architect Associate. I deploy on AWS regularly at Cognizant. ☁️";
-    else if (t.includes('hello') || t.includes('hi') || t.includes('hey'))
-      reply = "Hi there! 👋 I'm Harshini — software developer, AI engineer, and perpetual learner. What would you like to know about me?";
-    else if (t.includes('contact') || t.includes('email') || t.includes('hire'))
-      reply = "I'd love to connect! Scroll down to the contact section and drop me a message. I'm open to exciting SWE roles and AI collaborations! 📧";
-
-    const typingId = addTyping();
-    setTimeout(() => {
-      removeTyping(typingId);
-      addMsg(reply, 'bot');
-    }, 1200);
-  }
-
-  function addMsg(text, type) {
-    const container = document.getElementById('chat-messages');
-    const div = document.createElement('div');
-    div.className = `msg ${type}`;
-    div.textContent = text;
-    container.appendChild(div);
-    container.scrollTop = container.scrollHeight;
-  }
-
-  function addTyping() {
-    const container = document.getElementById('chat-messages');
-    const div = document.createElement('div');
-    const id = 'typing-' + Date.now();
-    div.id = id;
-    div.className = 'msg bot typing';
-    div.innerHTML = '<span></span><span></span><span></span>';
-    container.appendChild(div);
-    container.scrollTop = container.scrollHeight;
-    return id;
-  }
-
-  function removeTyping(id) {
-    const el = document.getElementById(id);
-    if (el) el.remove();
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    alert("Thanks for reaching out! I'll get back to you soon. 🚀");
-  }
-</script>
+<script src="assets/board.js" defer></script>
 </body>
 </html>

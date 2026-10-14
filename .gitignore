@@ -1,0 +1,14 @@
+# Working documents — these stay on this machine.
+# PRODUCT.md carries the client name and the n8n Cloud hostname.
+PRODUCT.md
+NOTES.local.md
+.impeccable/
+DESIGN.md
+
+# OS noise
+Thumbs.db
+desktop.ini
+.DS_Store
+
+deploy-site/
+harshini-portfolio-site.zip
